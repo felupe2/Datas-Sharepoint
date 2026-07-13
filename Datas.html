@@ -5,23 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aniversariantes</title>
     <style>
-        /* (Mantenha todo o código CSS/Style que eu mandei na resposta anterior aqui) */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: "Segoe UI", sans-serif; background-color: transparent; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .carousel-wrapper { position: relative; width: 100%; max-width: 800px; padding: 10px 40px; }
-        .carousel { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 10px; scroll-behavior: smooth; }
-        .carousel::-webkit-scrollbar { display: none; }
-        .card { min-width: 180px; background-color: #ffffff; border-radius: 8px; padding: 20px 15px; text-align: center; scroll-snap-align: start; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); border-top: 4px solid #005A9E; transition: transform 0.2s ease; }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
-        .avatar { width: 60px; height: 60px; border-radius: 50%; background-color: #E1F0FF; color: #005A9E; font-size: 22px; font-weight: 600; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
-        .name { font-size: 15px; color: #333333; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .date { font-size: 13px; color: #666666; margin-bottom: 10px; }
-        .badge { display: inline-block; background-color: #0078D4; color: white; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .badge.hoje { background-color: #107C10; }
-        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: #ffffff; border: 1px solid #e0e0e0; color: #005A9E; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 10; }
-        .nav-btn:hover { background-color: #f3f2f1; }
+        /* Reset e Fontes padrão do SharePoint (Segoe UI) */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
+            background-color: transparent; /* Fundo transparente */
+            overflow: hidden; /* Evita barras de rolagem externas no iframe */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Container do Carrossel */
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            padding: 10px 40px;
+        }
+
+        .carousel {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Oculta scrollbar no Firefox */
+            -ms-overflow-style: none; /* Oculta scrollbar no IE/Edge */
+            padding-bottom: 10px;
+            scroll-behavior: smooth;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none; /* Oculta scrollbar no Chrome/Safari */
+        }
+
+        /* Cartões estilo Flat / Minimalista */
+        .card {
+            min-width: 180px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px 15px;
+            text-align: center;
+            scroll-snap-align: start;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            /* Removido border-top */
+            transition: transform 0.2s ease;
+            position: relative;
+            overflow: hidden; /* Importante para o borrão */
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Cabeçalho de borrão azul-verde (inspirado na imagem) */
+        .card-blur-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            background: linear-gradient(90deg, #02b6be, #0076c8); /* Verde-azulado para azul */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* Ajuste de padding superior para o conteúdo do cartão */
+        .card-content {
+            padding-top: 15px;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #E1F0FF;
+            color: #005A9E;
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            /* Leve ajuste de posição para o avatar */
+            margin-top: -5px; 
+        }
+
+        .name {
+            font-size: 16px;
+            color: #333333;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .date {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #0078D4; /* Azul Claro */
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.hoje {
+            background-color: #107C10; /* Verde para destacar quem faz aniversário no dia */
+        }
+
+        /* Botões de Navegação */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            color: #005A9E;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        
+        .nav-btn:hover {
+            background-color: #f3f2f1;
+        }
+
         .prev-btn { left: 0; }
         .next-btn { right: 0; }
+
+        /* Estilo para quando não há aniversários */
+        .no-birthdays {
+            width: 100%;
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+            padding: 30px;
+        }
+
     </style>
 </head>
 <body>
@@ -34,7 +179,7 @@
     </div>
 
     <script>
-        // Agora a lista aceita o padrão DIA/MÊS
+        // 1. Sua lista de colaboradores e as datas de nascimento (Dia/Mês)
         const colaboradores = [
             { nome: "Alan Kardek da Silva Barros Neto", data: "02/01" },
             { nome: "Juciele Cristina Fappi Pinheiro", data: "22/01" },
@@ -58,60 +203,76 @@
             { nome: "Joyce Parize Leidens", data: "30/10" }
         ];
 
+        // 2. Lógica para filtrar e ordenar pelos próximos aniversários DESTE ANO
         function processarAniversarios(lista) {
             const hoje = new Date();
             const anoAtual = hoje.getFullYear();
-            hoje.setHours(0, 0, 0, 0);
+            hoje.setHours(0, 0, 0, 0); // Zera a hora para comparação justa
 
             return lista.map(pessoa => {
-                // A mudança principal foi aqui: o código agora lê "dia" primeiro e "mês" depois
                 const [dia, mes] = pessoa.data.split('/');
-                let dataNiver = new Date(anoAtual, parseInt(mes) - 1, parseInt(dia));
+                const dataNiver = new Date(anoAtual, parseInt(mes) - 1, parseInt(dia));
 
-                if (dataNiver < hoje) {
-                    dataNiver.setFullYear(anoAtual + 1);
-                }
-
+                // Calcula a diferença em dias (apenas para ordenação)
                 const diffTempo = dataNiver.getTime() - hoje.getTime();
                 const diffDias = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
 
                 return { ...pessoa, diffDias, dataNiver };
-            }).sort((a, b) => a.diffDias - b.diffDias);
+            })
+            // FILTRA apenas aniversários que ainda não ocorreram este ano
+            .filter(pessoa => pessoa.dataNiver >= hoje) 
+            .sort((a, b) => a.diffDias - b.diffDias); // Ordena do mais próximo ao mais distante
         }
 
+        // 3. Renderizar no HTML
         function renderizarCarrossel() {
             const carrossel = document.getElementById('birthday-carousel');
             const ordenados = processarAniversarios(colaboradores);
+
+            // Limpa o carrossel
+            carrossel.innerHTML = '';
+
+            if (ordenados.length === 0) {
+                carrossel.innerHTML = '<div class="no-birthdays">Não há mais aniversários este ano.</div>';
+                return;
+            }
 
             ordenados.forEach(pessoa => {
                 const isHoje = pessoa.diffDias === 0;
                 let textoBadge = isHoje ? "Hoje!" : `Faltam ${pessoa.diffDias} dias`;
                 
+                // Extrai as iniciais do nome para o Avatar (primeiro e último nome)
                 const partesNome = pessoa.nome.trim().split(' ');
                 const iniciais = partesNome.length > 1 
                     ? (partesNome[0][0] + partesNome[partesNome.length - 1][0]).toUpperCase()
                     : partesNome[0][0].toUpperCase();
                 
+                // Formata a data para exibir (Ex: 02 de jan)
                 const dataFormatada = pessoa.dataNiver.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
 
                 const cardHTML = `
                     <div class="card">
-                        <div class="avatar">${iniciais}</div>
-                        <div class="name" title="${pessoa.nome}">${pessoa.nome}</div>
-                        <div class="date">${dataFormatada}</div>
-                        <div class="badge ${isHoje ? 'hoje' : ''}">${textoBadge}</div>
+                        <div class="card-blur-header"></div>
+                        <div class="card-content">
+                            <div class="avatar">${iniciais}</div>
+                            <div class="name" title="${pessoa.nome}">${pessoa.nome}</div>
+                            <div class="date">${dataFormatada}</div>
+                            <div class="badge ${isHoje ? 'hoje' : ''}">${textoBadge}</div>
+                        </div>
                     </div>
                 `;
                 carrossel.innerHTML += cardHTML;
             });
         }
 
+        // 4. Lógica de Navegação dos Botões
         function scrollCarousel(direcao) {
             const carrossel = document.getElementById('birthday-carousel');
-            const scrollAmount = 196; 
+            const scrollAmount = 200; // Largura do card + gap
             carrossel.scrollBy({ left: scrollAmount * direcao, behavior: 'smooth' });
         }
 
+        // Inicializa o script
         renderizarCarrossel();
     </script>
 </body>
