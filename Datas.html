@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aniversariantes</title>
     <style>
-        /* Reset e Fontes padrão do SharePoint (Segoe UI) */
+        /* Reset e Fontes */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,43 +13,58 @@
         }
         body {
             font-family: "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
-            background-color: transparent; /* Fundo transparente para se integrar ao SharePoint */
+            background-color: transparent;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
+            color: #201f1e;
         }
 
-        /* Container do Carrossel */
+        /* Estrutura Principal para acomodar o rodapé */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            max-width: 1100px;
+            padding: 10px 20px;
+        }
+
+        /* Wrapper do Carrossel */
         .carousel-wrapper {
             position: relative;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
             width: 100%;
-            max-width: 800px;
-            padding: 10px 40px;
+            padding: 0 35px;
         }
 
         .carousel {
             display: flex;
-            gap: 16px;
+            gap: 14px;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            padding-bottom: 10px;
+            padding: 10px 0;
             scroll-behavior: smooth;
+            width: 100%;
         }
 
         .carousel::-webkit-scrollbar {
             display: none;
         }
 
-        /* Cartões estilo Flat / Minimalista */
+        /* Cartões Responsivos (Alvo: 6 por visualização) */
         .card {
-            min-width: 180px;
+            flex: 0 0 calc((100% / 6) - 12px); 
+            min-width: 130px;
             background-color: #ffffff;
             border-radius: 12px;
-            padding: 0 0 20px 0;
+            padding: 0 0 16px 0;
             text-align: center;
             scroll-snap-align: start;
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
@@ -64,18 +79,17 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
 
-        /* Cabeçalho com o efeito Blur idêntico à imagem enviada */
+        /* Cabeçalho com o Efeito Blur */
         .card-blur-header {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 50px;
+            height: 45px;
             background: #0076c8;
             overflow: hidden;
         }
         
-        /* Simulação do efeito fluido de borrão (BLUUUR.png) */
         .card-blur-header::before {
             content: '';
             position: absolute;
@@ -91,61 +105,60 @@
             opacity: 0.95;
         }
 
-        /* Conteúdo do Cartão */
         .card-content {
             position: relative;
-            padding-top: 20px;
+            padding-top: 15px;
             z-index: 2;
         }
 
         .avatar {
-            width: 65px;
-            height: 65px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             background-color: #E1F0FF;
             color: #005A9E;
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px;
-            border: 4px solid #ffffff; /* Borda branca para destacar sobre o blur */
+            margin: 0 auto 10px;
+            border: 3px solid #ffffff;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .name {
-            font-size: 15px;
+            font-size: 14px;
             color: #201f1e;
             font-weight: 600;
-            margin-bottom: 4px;
-            padding: 0 10px;
+            margin-bottom: 2px;
+            padding: 0 8px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .date {
-            font-size: 13px;
+            font-size: 12px;
             color: #605e5c;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
+        /* Estilos das Badges */
         .badge {
             display: inline-block;
             background-color: #0078D4;
             color: white;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 12px;
+            padding: 4px 10px;
+            border-radius: 10px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
 
-        .badge.hoje {
-            background-color: #107C10;
-        }
+        .badge.hoje { background-color: #107C10; }
+        .badge.passou { background-color: #edebe9; color: #605e5c; }
 
         /* Botões de Navegação */
         .nav-btn {
@@ -155,42 +168,75 @@
             background-color: #ffffff;
             border: 1px solid #dee2e6;
             color: #005A9E;
-            width: 34px;
-            height: 34px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             z-index: 10;
             transition: background-color 0.2s;
         }
         
-        .nav-btn:hover {
-            background-color: #f3f2f1;
-        }
-
+        .nav-btn:hover { background-color: #f3f2f1; }
         .prev-btn { left: 0; }
         .next-btn { right: 0; }
+
+        /* Rodapé com a Checkbox */
+        .footer-controls {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 5px 35px 0 0;
+            width: 100%;
+        }
+
+        .checkbox-label {
+            font-size: 12px;
+            color: #605e5c;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            cursor: pointer;
+            width: 14px;
+            height: 14px;
+            accent-color: #005A9E;
+        }
 
         .no-birthdays {
             width: 100%;
             text-align: center;
             color: #605e5c;
-            font-size: 15px;
-            padding: 40px;
+            font-size: 14px;
+            padding: 30px;
         }
     </style>
 </head>
 <body>
 
-    <div class="carousel-wrapper">
-        <button class="nav-btn prev-btn" onclick="scrollCarousel(-1)">&#10094;</button>
-        <div class="carousel" id="birthday-carousel">
+    <div class="main-container">
+        <div class="carousel-wrapper">
+            <button class="nav-btn prev-btn" onclick="scrollCarousel(-1)">&#10094;</button>
+            <div class="carousel" id="birthday-carousel">
+                <!-- Injeção dinâmica -->
             </div>
-        <button class="nav-btn next-btn" onclick="scrollCarousel(1)">&#10095;</button>
+            <button class="nav-btn next-btn" onclick="scrollCarousel(1)">&#10095;</button>
+        </div>
+        
+        <div class="footer-controls">
+            <label class="checkbox-label">
+                <input type="checkbox" id="chk-todos" onchange="renderizarCarrossel()">
+                Ver todos os aniversariantes
+            </label>
+        </div>
     </div>
 
     <script>
@@ -218,23 +264,34 @@
         ];
 
         function processarAniversarios(lista) {
+            const chkTodos = document.getElementById('chk-todos');
+            // Proteção extra caso o checkbox não tenha carregado ainda
+            const mostrarTodos = chkTodos ? chkTodos.checked : false; 
+            
             const hoje = new Date();
             const anoAtual = hoje.getFullYear();
             hoje.setHours(0, 0, 0, 0);
 
-            return lista.map(pessoa => {
-                const [dia, mes] = pessa.data.split('/');
-                // Força a criação do objeto de data estritamente dentro do ano corrente
+            let dadosProcessados = lista.map(pessoa => {
+                // CORREÇÃO: Estava "pessa.data", corrigido para "pessoa.data"
+                const [dia, mes] = pessoa.data.split('/');
                 const dataNiver = new Date(anoAtual, parseInt(mes) - 1, parseInt(dia));
 
                 const diffTempo = dataNiver.getTime() - hoje.getTime();
                 const diffDias = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
+                
+                const valorOrdemAno = parseInt(mes) * 100 + parseInt(dia);
 
-                return { ...pessoa, diffDias, dataNiver };
-            })
-            // FILTRA: Remove estritamente quem já passou do dia de hoje neste ano
-            .filter(pessoa => pessoa.dataNiver >= hoje)
-            .sort((a, b) => a.diffDias - b.diffDias);
+                return { ...pessoa, diffDias, dataNiver, valorOrdemAno };
+            });
+
+            if (mostrarTodos) {
+                return dadosProcessados.sort((a, b) => a.valorOrdemAno - b.valorOrdemAno);
+            } else {
+                return dadosProcessados
+                    .filter(pessoa => pessoa.dataNiver >= hoje)
+                    .sort((a, b) => a.diffDias - b.diffDias);
+            }
         }
 
         function renderizarCarrossel() {
@@ -249,8 +306,18 @@
             }
 
             ordenados.forEach(pessoa => {
-                const isHoje = pessoa.diffDias === 0;
-                let textoBadge = isHoje ? "Hoje!" : `Faltam ${pessoa.diffDias} dias`;
+                let classeBadge = "";
+                let textoBadge = "";
+
+                if (pessoa.diffDias === 0) {
+                    classeBadge = "hoje";
+                    textoBadge = "Hoje!";
+                } else if (pessoa.diffDias < 0) {
+                    classeBadge = "passou";
+                    textoBadge = "Já passou";
+                } else {
+                    textoBadge = `Faltam ${pessoa.diffDias} dias`;
+                }
                 
                 const partesNome = pessoa.nome.trim().split(' ');
                 const iniciais = partesNome.length > 1 
@@ -266,7 +333,7 @@
                             <div class="avatar">${iniciais}</div>
                             <div class="name" title="${pessoa.nome}">${pessoa.nome}</div>
                             <div class="date">${dataFormatada}</div>
-                            <div class="badge ${isHoje ? 'hoje' : ''}">${textoBadge}</div>
+                            <div class="badge ${classeBadge}">${textoBadge}</div>
                         </div>
                     </div>
                 `;
@@ -276,10 +343,14 @@
 
         function scrollCarousel(direcao) {
             const carrossel = document.getElementById('birthday-carousel');
-            const scrollAmount = 196; 
-            carrossel.scrollBy({ left: scrollAmount * direcao, behavior: 'smooth' });
+            const card = carrossel.querySelector('.card');
+            if(card) {
+                const scrollAmount = card.offsetWidth + 14; 
+                carrossel.scrollBy({ left: scrollAmount * direcao, behavior: 'smooth' });
+            }
         }
 
+        // Inicializa a primeira renderização
         renderizarCarrossel();
     </script>
 </body>
