@@ -6,11 +6,7 @@
     <title>Aniversariantes</title>
     <style>
         /* Reset e Fontes */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
             background-color: transparent;
@@ -22,29 +18,27 @@
             color: #201f1e;
         }
 
-        /* Estrutura Principal para acomodar o rodapé */
         .main-container {
             display: flex;
             flex-direction: column;
             width: 100%;
             height: 100%;
-            max-width: 1100px;
-            padding: 10px 20px;
+            max-width: 1200px;
+            padding: 10px 15px;
         }
 
-        /* Wrapper do Carrossel */
         .carousel-wrapper {
             position: relative;
             flex-grow: 1;
             display: flex;
             align-items: center;
             width: 100%;
-            padding: 0 35px;
+            padding: 0 40px;
         }
 
         .carousel {
             display: flex;
-            gap: 14px;
+            gap: 15px;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             scrollbar-width: none;
@@ -52,16 +46,14 @@
             padding: 10px 0;
             scroll-behavior: smooth;
             width: 100%;
+            flex: 1;
         }
+        .carousel::-webkit-scrollbar { display: none; }
 
-        .carousel::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Cartões Responsivos (Alvo: 6 por visualização) */
+        /* LARGURA FIXA SEGURA: Evita o erro dos cards invisíveis */
         .card {
-            flex: 0 0 calc((100% / 6) - 12px); 
-            min-width: 130px;
+            flex: 0 0 auto; 
+            width: 155px; 
             background-color: #ffffff;
             border-radius: 12px;
             padding: 0 0 16px 0;
@@ -79,12 +71,9 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
 
-        /* Cabeçalho com o Efeito Blur */
         .card-blur-header {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 45px;
             background: #0076c8;
             overflow: hidden;
@@ -93,10 +82,8 @@
         .card-blur-header::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
             background: radial-gradient(circle at 20% 30%, #02b6be 0%, transparent 55%),
                         radial-gradient(circle at 75% 20%, #005A9E 0%, transparent 50%),
                         radial-gradient(circle at 40% 80%, #facc15 0%, transparent 60%),
@@ -105,119 +92,55 @@
             opacity: 0.95;
         }
 
-        .card-content {
-            position: relative;
-            padding-top: 15px;
-            z-index: 2;
-        }
+        .card-content { position: relative; padding-top: 15px; z-index: 2; }
 
         .avatar {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background-color: #E1F0FF;
-            color: #005A9E;
-            font-size: 18px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            border: 3px solid #ffffff;
+            width: 55px; height: 55px; border-radius: 50%;
+            background-color: #E1F0FF; color: #005A9E;
+            font-size: 18px; font-weight: 600;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px; border: 3px solid #ffffff;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .name {
-            font-size: 14px;
-            color: #201f1e;
-            font-weight: 600;
-            margin-bottom: 2px;
-            padding: 0 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 14px; color: #201f1e; font-weight: 600;
+            margin-bottom: 2px; padding: 0 8px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        .date {
-            font-size: 12px;
-            color: #605e5c;
-            margin-bottom: 10px;
-        }
+        .date { font-size: 12px; color: #605e5c; margin-bottom: 10px; }
 
-        /* Estilos das Badges */
         .badge {
-            display: inline-block;
-            background-color: #0078D4;
-            color: white;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
+            display: inline-block; background-color: #0078D4; color: white;
+            font-size: 10px; font-weight: 600; padding: 4px 10px;
+            border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px;
         }
-
         .badge.hoje { background-color: #107C10; }
         .badge.passou { background-color: #edebe9; color: #605e5c; }
 
-        /* Botões de Navegação */
         .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #ffffff;
-            border: 1px solid #dee2e6;
-            color: #005A9E;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-            z-index: 10;
-            transition: background-color 0.2s;
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background-color: #ffffff; border: 1px solid #dee2e6; color: #005A9E;
+            width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); z-index: 10;
         }
-        
         .nav-btn:hover { background-color: #f3f2f1; }
-        .prev-btn { left: 0; }
-        .next-btn { right: 0; }
+        .prev-btn { left: 5px; }
+        .next-btn { right: 5px; }
 
-        /* Rodapé com a Checkbox */
         .footer-controls {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 5px 35px 0 0;
-            width: 100%;
+            display: flex; justify-content: flex-end; align-items: center;
+            padding: 5px 40px 0 0; width: 100%;
         }
 
         .checkbox-label {
-            font-size: 12px;
-            color: #605e5c;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            user-select: none;
+            font-size: 13px; color: #605e5c; display: flex;
+            align-items: center; gap: 8px; cursor: pointer; user-select: none;
         }
-
-        .checkbox-label input[type="checkbox"] {
-            cursor: pointer;
-            width: 14px;
-            height: 14px;
-            accent-color: #005A9E;
-        }
-
-        .no-birthdays {
-            width: 100%;
-            text-align: center;
-            color: #605e5c;
-            font-size: 14px;
-            padding: 30px;
-        }
+        .checkbox-label input[type="checkbox"] { cursor: pointer; width: 16px; height: 16px; accent-color: #005A9E; }
+        .no-birthdays { width: 100%; text-align: center; color: #605e5c; font-size: 14px; padding: 30px; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -226,8 +149,7 @@
         <div class="carousel-wrapper">
             <button class="nav-btn prev-btn" onclick="scrollCarousel(-1)">&#10094;</button>
             <div class="carousel" id="birthday-carousel">
-                <!-- Injeção dinâmica -->
-            </div>
+                </div>
             <button class="nav-btn next-btn" onclick="scrollCarousel(1)">&#10095;</button>
         </div>
         
@@ -265,7 +187,6 @@
 
         function processarAniversarios(lista) {
             const chkTodos = document.getElementById('chk-todos');
-            // Proteção extra caso o checkbox não tenha carregado ainda
             const mostrarTodos = chkTodos ? chkTodos.checked : false; 
             
             const hoje = new Date();
@@ -273,8 +194,8 @@
             hoje.setHours(0, 0, 0, 0);
 
             let dadosProcessados = lista.map(pessoa => {
-                // CORREÇÃO: Estava "pessa.data", corrigido para "pessoa.data"
-                const [dia, mes] = pessoa.data.split('/');
+                const dataLimpa = pessoa.data.replace('-', '/');
+                const [dia, mes] = dataLimpa.split('/');
                 const dataNiver = new Date(anoAtual, parseInt(mes) - 1, parseInt(dia));
 
                 const diffTempo = dataNiver.getTime() - hoje.getTime();
@@ -296,9 +217,10 @@
 
         function renderizarCarrossel() {
             const carrossel = document.getElementById('birthday-carousel');
+            if (!carrossel) return;
+            
             const ordenados = processarAniversarios(colaboradores);
-
-            carrossel.innerHTML = '';
+            let htmlFinal = "";
 
             if (ordenados.length === 0) {
                 carrossel.innerHTML = '<div class="no-birthdays">Não há mais aniversariantes este ano.</div>';
@@ -319,14 +241,14 @@
                     textoBadge = `Faltam ${pessoa.diffDias} dias`;
                 }
                 
-                const partesNome = pessoa.nome.trim().split(' ');
+                const partesNome = pessoa.nome.trim().split(/\s+/);
                 const iniciais = partesNome.length > 1 
                     ? (partesNome[0][0] + partesNome[partesNome.length - 1][0]).toUpperCase()
-                    : partesNome[0][0].toUpperCase();
+                    : (partesNome[0][0] || "?").toUpperCase();
                 
                 const dataFormatada = pessoa.dataNiver.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
 
-                const cardHTML = `
+                htmlFinal += `
                     <div class="card">
                         <div class="card-blur-header"></div>
                         <div class="card-content">
@@ -337,21 +259,25 @@
                         </div>
                     </div>
                 `;
-                carrossel.innerHTML += cardHTML;
             });
+
+            carrossel.innerHTML = htmlFinal;
         }
 
         function scrollCarousel(direcao) {
             const carrossel = document.getElementById('birthday-carousel');
+            if (!carrossel) return;
             const card = carrossel.querySelector('.card');
-            if(card) {
-                const scrollAmount = card.offsetWidth + 14; 
+            if (card) {
+                const scrollAmount = card.offsetWidth + 15; 
                 carrossel.scrollBy({ left: scrollAmount * direcao, behavior: 'smooth' });
             }
         }
 
-        // Inicializa a primeira renderização
-        renderizarCarrossel();
+        // Executa com segurança somente após o DOM estar pronto
+        window.onload = function() {
+            renderizarCarrossel();
+        };
     </script>
 </body>
 </html>
