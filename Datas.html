@@ -13,8 +13,8 @@
         }
         body {
             font-family: "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
-            background-color: transparent; /* Fundo transparente */
-            overflow: hidden; /* Evita barras de rolagem externas no iframe */
+            background-color: transparent; /* Fundo transparente para se integrar ao SharePoint */
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -34,76 +34,92 @@
             gap: 16px;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
-            scrollbar-width: none; /* Oculta scrollbar no Firefox */
-            -ms-overflow-style: none; /* Oculta scrollbar no IE/Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
             padding-bottom: 10px;
             scroll-behavior: smooth;
         }
 
         .carousel::-webkit-scrollbar {
-            display: none; /* Oculta scrollbar no Chrome/Safari */
+            display: none;
         }
 
         /* Cartões estilo Flat / Minimalista */
         .card {
             min-width: 180px;
             background-color: #ffffff;
-            border-radius: 8px;
-            padding: 20px 15px;
+            border-radius: 12px;
+            padding: 0 0 20px 0;
             text-align: center;
             scroll-snap-align: start;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            /* Removido border-top */
-            transition: transform 0.2s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             position: relative;
-            overflow: hidden; /* Importante para o borrão */
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
 
-        /* Cabeçalho de borrão azul-verde (inspirado na imagem) */
+        /* Cabeçalho com o efeito Blur idêntico à imagem enviada */
         .card-blur-header {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 10px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            background: linear-gradient(90deg, #02b6be, #0076c8); /* Verde-azulado para azul */
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            height: 50px;
+            background: #0076c8;
+            overflow: hidden;
+        }
+        
+        /* Simulação do efeito fluido de borrão (BLUUUR.png) */
+        .card-blur-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 30%, #02b6be 0%, transparent 55%),
+                        radial-gradient(circle at 75% 20%, #005A9E 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, #facc15 0%, transparent 60%),
+                        radial-gradient(circle at 80% 85%, #6366f1 0%, transparent 50%);
+            filter: blur(14px);
+            opacity: 0.95;
         }
 
-        /* Ajuste de padding superior para o conteúdo do cartão */
+        /* Conteúdo do Cartão */
         .card-content {
-            padding-top: 15px;
+            position: relative;
+            padding-top: 20px;
+            z-index: 2;
         }
 
         .avatar {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
             background-color: #E1F0FF;
             color: #005A9E;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 12px;
-            /* Leve ajuste de posição para o avatar */
-            margin-top: -5px; 
+            border: 4px solid #ffffff; /* Borda branca para destacar sobre o blur */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .name {
-            font-size: 16px;
-            color: #333333;
+            font-size: 15px;
+            color: #201f1e;
             font-weight: 600;
             margin-bottom: 4px;
+            padding: 0 10px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -111,24 +127,24 @@
 
         .date {
             font-size: 13px;
-            color: #666666;
-            margin-bottom: 10px;
+            color: #605e5c;
+            margin-bottom: 12px;
         }
 
         .badge {
             display: inline-block;
-            background-color: #0078D4; /* Azul Claro */
+            background-color: #0078D4;
             color: white;
             font-size: 11px;
             font-weight: 600;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         .badge.hoje {
-            background-color: #107C10; /* Verde para destacar quem faz aniversário no dia */
+            background-color: #107C10;
         }
 
         /* Botões de Navegação */
@@ -137,18 +153,19 @@
             top: 50%;
             transform: translateY(-50%);
             background-color: #ffffff;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #dee2e6;
             color: #005A9E;
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             z-index: 10;
+            transition: background-color 0.2s;
         }
         
         .nav-btn:hover {
@@ -158,15 +175,13 @@
         .prev-btn { left: 0; }
         .next-btn { right: 0; }
 
-        /* Estilo para quando não há aniversários */
         .no-birthdays {
             width: 100%;
             text-align: center;
-            color: #666;
-            font-size: 16px;
-            padding: 30px;
+            color: #605e5c;
+            font-size: 15px;
+            padding: 40px;
         }
-
     </style>
 </head>
 <body>
@@ -179,7 +194,6 @@
     </div>
 
     <script>
-        // 1. Sua lista de colaboradores e as datas de nascimento (Dia/Mês)
         const colaboradores = [
             { nome: "Alan Kardek da Silva Barros Neto", data: "02/01" },
             { nome: "Juciele Cristina Fappi Pinheiro", data: "22/01" },
@@ -203,37 +217,34 @@
             { nome: "Joyce Parize Leidens", data: "30/10" }
         ];
 
-        // 2. Lógica para filtrar e ordenar pelos próximos aniversários DESTE ANO
         function processarAniversarios(lista) {
             const hoje = new Date();
             const anoAtual = hoje.getFullYear();
-            hoje.setHours(0, 0, 0, 0); // Zera a hora para comparação justa
+            hoje.setHours(0, 0, 0, 0);
 
             return lista.map(pessoa => {
-                const [dia, mes] = pessoa.data.split('/');
+                const [dia, mes] = pessa.data.split('/');
+                // Força a criação do objeto de data estritamente dentro do ano corrente
                 const dataNiver = new Date(anoAtual, parseInt(mes) - 1, parseInt(dia));
 
-                // Calcula a diferença em dias (apenas para ordenação)
                 const diffTempo = dataNiver.getTime() - hoje.getTime();
                 const diffDias = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
 
                 return { ...pessoa, diffDias, dataNiver };
             })
-            // FILTRA apenas aniversários que ainda não ocorreram este ano
-            .filter(pessoa => pessoa.dataNiver >= hoje) 
-            .sort((a, b) => a.diffDias - b.diffDias); // Ordena do mais próximo ao mais distante
+            // FILTRA: Remove estritamente quem já passou do dia de hoje neste ano
+            .filter(pessoa => pessoa.dataNiver >= hoje)
+            .sort((a, b) => a.diffDias - b.diffDias);
         }
 
-        // 3. Renderizar no HTML
         function renderizarCarrossel() {
             const carrossel = document.getElementById('birthday-carousel');
             const ordenados = processarAniversarios(colaboradores);
 
-            // Limpa o carrossel
             carrossel.innerHTML = '';
 
             if (ordenados.length === 0) {
-                carrossel.innerHTML = '<div class="no-birthdays">Não há mais aniversários este ano.</div>';
+                carrossel.innerHTML = '<div class="no-birthdays">Não há mais aniversariantes este ano.</div>';
                 return;
             }
 
@@ -241,13 +252,11 @@
                 const isHoje = pessoa.diffDias === 0;
                 let textoBadge = isHoje ? "Hoje!" : `Faltam ${pessoa.diffDias} dias`;
                 
-                // Extrai as iniciais do nome para o Avatar (primeiro e último nome)
                 const partesNome = pessoa.nome.trim().split(' ');
                 const iniciais = partesNome.length > 1 
                     ? (partesNome[0][0] + partesNome[partesNome.length - 1][0]).toUpperCase()
                     : partesNome[0][0].toUpperCase();
                 
-                // Formata a data para exibir (Ex: 02 de jan)
                 const dataFormatada = pessoa.dataNiver.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
 
                 const cardHTML = `
@@ -265,14 +274,12 @@
             });
         }
 
-        // 4. Lógica de Navegação dos Botões
         function scrollCarousel(direcao) {
             const carrossel = document.getElementById('birthday-carousel');
-            const scrollAmount = 200; // Largura do card + gap
+            const scrollAmount = 196; 
             carrossel.scrollBy({ left: scrollAmount * direcao, behavior: 'smooth' });
         }
 
-        // Inicializa o script
         renderizarCarrossel();
     </script>
 </body>
