@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aniversariantes</title>
     <style>
-        /* Reset e Fontes */
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
             font-family: "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
             background-color: transparent;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
             color: #201f1e;
         }
 
@@ -22,14 +18,14 @@
             display: flex;
             flex-direction: column;
             width: 100%;
-            height: 100%;
             max-width: 1200px;
-            padding: 10px 15px;
+            /* Adicionado 10px de padding na parte inferior para a caixinha não colar no fim da tela */
+            padding: 5px 15px 10px 15px; 
+            margin: 0 auto;
         }
 
         .carousel-wrapper {
             position: relative;
-            flex-grow: 1;
             display: flex;
             align-items: center;
             width: 100%;
@@ -43,14 +39,12 @@
             scroll-snap-type: x mandatory;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            padding: 10px 0;
+            padding: 5px 0 10px 0; 
             scroll-behavior: smooth;
             width: 100%;
-            flex: 1;
         }
         .carousel::-webkit-scrollbar { display: none; }
 
-        /* LARGURA FIXA SEGURA: Evita o erro dos cards invisíveis */
         .card {
             flex: 0 0 auto; 
             width: 155px; 
@@ -130,6 +124,7 @@
         .prev-btn { left: 5px; }
         .next-btn { right: 5px; }
 
+        /* Ajuste do rodapé */
         .footer-controls {
             display: flex; justify-content: flex-end; align-items: center;
             padding: 5px 40px 0 0; width: 100%;
@@ -139,8 +134,8 @@
             font-size: 13px; color: #605e5c; display: flex;
             align-items: center; gap: 8px; cursor: pointer; user-select: none;
         }
-        .checkbox-label input[type="checkbox"] { cursor: pointer; width: 16px; height: 16px; accent-color: #005A9E; }
-        .no-birthdays { width: 100%; text-align: center; color: #605e5c; font-size: 14px; padding: 30px; font-weight: 500; }
+        .checkbox-label input[type="checkbox"] { cursor: pointer; width: 15px; height: 15px; accent-color: #005A9E; }
+        .no-birthdays { width: 100%; text-align: center; color: #605e5c; font-size: 14px; padding: 20px; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -156,7 +151,7 @@
         <div class="footer-controls">
             <label class="checkbox-label">
                 <input type="checkbox" id="chk-todos" onchange="renderizarCarrossel()">
-                Ver todos os aniversariantes
+                Todos Aniversariantes
             </label>
         </div>
     </div>
@@ -274,7 +269,6 @@
             }
         }
 
-        // Executa com segurança somente após o DOM estar pronto
         window.onload = function() {
             renderizarCarrossel();
         };
