@@ -19,7 +19,6 @@
             flex-direction: column;
             width: 100%;
             max-width: 1200px;
-            /* Adicionado 10px de padding na parte inferior para a caixinha não colar no fim da tela */
             padding: 5px 15px 10px 15px; 
             margin: 0 auto;
         }
@@ -65,12 +64,64 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
 
+        /* --- NOVO: Efeito Dourado para quem faz aniversário hoje --- */
+        .card.aniversario-hoje {
+            border: 1px solid rgba(255, 215, 0, 0.8);
+            animation: brilho-dourado 2s infinite alternate;
+        }
+
+        @keyframes brilho-dourado {
+            0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), inset 0 0 5px rgba(255, 215, 0, 0.1); }
+            100% { box-shadow: 0 0 22px rgba(255, 215, 0, 0.8), inset 0 0 15px rgba(255, 215, 0, 0.2); }
+        }
+
+        /* --- NOVO: Partículas ultraleves em CSS --- */
+        .particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particles::before, .particles::after {
+            content: '';
+            position: absolute;
+            width: 200%; height: 200%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #ffd700 2px, transparent 3px),
+                radial-gradient(circle at 80% 40%, #ffdf00 1.5px, transparent 2px),
+                radial-gradient(circle at 40% 60%, #ffd700 2px, transparent 3px),
+                radial-gradient(circle at 70% 90%, #ffdf00 1px, transparent 2px),
+                radial-gradient(circle at 90% 10%, #ffd700 2px, transparent 3px);
+            background-size: 100px 100px;
+            animation: mover-particulas 6s linear infinite;
+            opacity: 0.7;
+        }
+
+        .particles::after {
+            background-image: 
+                radial-gradient(circle at 50% 50%, #ffd700 1.5px, transparent 2px),
+                radial-gradient(circle at 20% 80%, #ffdf00 2px, transparent 3px),
+                radial-gradient(circle at 80% 20%, #ffd700 1px, transparent 2px);
+            animation-duration: 8s;
+            animation-direction: reverse;
+            opacity: 0.5;
+        }
+
+        @keyframes mover-particulas {
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(-50px) translateX(-20px); }
+        }
+        /* ------------------------------------------------------------ */
+
         .card-blur-header {
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 45px;
             background: #0076c8;
             overflow: hidden;
+            z-index: 0;
         }
         
         .card-blur-header::before {
@@ -95,6 +146,7 @@
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 10px; border: 3px solid #ffffff;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            position: relative; /* Garante que fique acima das partículas */
         }
 
         .name {
@@ -124,7 +176,6 @@
         .prev-btn { left: 5px; }
         .next-btn { right: 5px; }
 
-        /* Ajuste do rodapé */
         .footer-controls {
             display: flex; justify-content: flex-end; align-items: center;
             padding: 5px 40px 0 0; width: 100%;
@@ -143,8 +194,7 @@
     <div class="main-container">
         <div class="carousel-wrapper">
             <button class="nav-btn prev-btn" onclick="scrollCarousel(-1)">&#10094;</button>
-            <div class="carousel" id="birthday-carousel">
-                </div>
+            <div class="carousel" id="birthday-carousel"></div>
             <button class="nav-btn next-btn" onclick="scrollCarousel(1)">&#10095;</button>
         </div>
         
@@ -225,8 +275,9 @@
             ordenados.forEach(pessoa => {
                 let classeBadge = "";
                 let textoBadge = "";
+                let ehHoje = pessoa.diffDias === 0;
 
-                if (pessoa.diffDias === 0) {
+                if (ehHoje) {
                     classeBadge = "hoje";
                     textoBadge = "Hoje!";
                 } else if (pessoa.diffDias < 0) {
@@ -243,8 +294,13 @@
                 
                 const dataFormatada = pessoa.dataNiver.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
 
+                // Adiciona a classe e a div de partículas se o aniversário for hoje
+                let classeCard = ehHoje ? "card aniversario-hoje" : "card";
+                let particulasHTML = ehHoje ? '<div class="particles"></div>' : '';
+
                 htmlFinal += `
-                    <div class="card">
+                    <div class="${classeCard}">
+                        ${particulasHTML}
                         <div class="card-blur-header"></div>
                         <div class="card-content">
                             <div class="avatar">${iniciais}</div>
